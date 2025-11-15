@@ -12,3 +12,8 @@
     git push
 
     change to git add file_name.java if you want to add individual files
+
+- Stage vs Commit vs Push 
+    Stage - prepares selected changed for the snapshot
+    Commit - Commits snapshot locally
+    Push - Pushes it into github for everyone
