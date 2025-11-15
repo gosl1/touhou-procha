@@ -1,4 +1,4 @@
-"If you wanna stick to this seriously, place all of your desires in here. Now I don't know what you humans want, but something like fiddling with that mysterious box in your hand should be in here too."
+"If you wanna stick to this seriously, place all of your desires in here. Although I don't know what you humans want, something like fiddling with that mysterious box in your hand should be in here too..."
 
 
 -START-
@@ -15,5 +15,9 @@
 
 - How do I offer my faith?
 
-"Well, faith is garnered from your spirit and mind. The effort you put in every day, your commitment to something you wish to achieve, anything that leads to personal growth. Complete the tasks you believe are important in your life. Each task symbolizes a commitment or a small personal victory that strengthens your spirit and resolve. Although, I would appreciate it more if those tasks involved maintaining the shrine. Hehe."
+"Well, faith is garnered from your spirit and mind. The effort you put in every day, your commitment to something you wish to achieve, anything that leads to personal growth."
+
+"Complete the tasks you believe are important in your life. Each task symbolizes a commitment or a small personal victory that strengthens your spirit and resolve."
+
+"Although, I would appreciate it more if those tasks involved maintaining the shrine. Hehe."
 

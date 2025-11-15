@@ -8,3 +8,5 @@ Following professional structures is fine, but you should still think through pr
 A good way to break this habit is the “5-minute imperfect start”: spend a few minutes writing messy code or ideas without worrying about correctness. This trains your brain to accept mistakes as part of learning.
 
 Nothing is wrong with you — this is a common stage for disciplined learners.
+
+AI SLOP BTW
