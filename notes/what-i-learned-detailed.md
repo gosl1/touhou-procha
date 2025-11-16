@@ -17,3 +17,9 @@
     Stage - prepares selected changed for the snapshot
     Commit - Commits snapshot locally
     Push - Pushes it into github for everyone
+
+
+- pulling
+    git pull origin <name of branch>
+    for now, we might not be doing branches so
+    git pull origin main
