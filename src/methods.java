@@ -3,48 +3,67 @@ import java.util.*;
 
 class methods{
 
-  static ArrayList<String> tasks = new ArrayList<>();			// Static ArrayList for use in other aspects of the code
+  static ArrayList<Tasks> tasks = new ArrayList<>();			// Static ArrayList for use in other aspects of the code
 	
-	/*
-	For saving the elements of the ArrayList into a file
-	Will also be used later in task removal
-	*/
   
-  public static void fileSave() throws IOException{
-    FileWriter writer = new FileWriter("tasks.txt");		
-    for (String task : tasks) {								// Iterates through the ArrayList for every element
-      writer.write(task + "\n");							// Writes that element into the file
+  public static void fileSave(StringBuilder task) throws IOException{
+    FileWriter writer = new FileWriter("tasks.txt", true);		
+    writer.write(task + "\n");
+	writer.close();
     }
-    writer.close();
+
+
+	public static void readFile(String fileName){
+		Scanner fileScanner = new Scanner(new File(fileName));
+		tasks.clear();
+		while (fileScanner.hasNextLine()) {
+			String line = fileScanner.nextLine();
+			String[] taskData = line.split("\\|");
+			if (taskData.length == 3) {
+				tasks.add(new Tasks(taskData[0], taskData[1], taskData[2]));
+			}
+		}
+		fileScanner.close();
 	}
 
   public static void addTask() throws IOException{
-		File file = new File("tasks.txt");					// 'file' points to a file named 'tasks.txt'
-
-        if (!file.exists()) {								// Creates a new file with the same name as whatever 'file' is pointing to
-            file.createNewFile();
-        }
-		
-		Scanner fileScanner = new Scanner(file);			// For data persistence
-    tasks.clear();
-    while (fileScanner.hasNextLine()) {					// While the file still has lines left
-        String task = fileScanner.nextLine();			// Saves that line to a variable
-        tasks.add(task);								// Saves that variable to the ArrayList
-    }
-    fileScanner.close();
+	File file = new File("tasks.txt");							// 'file' points to a file named 'tasks.txt'
+	if (!file.exists()) {										// Creates a new file with the same name as whatever 'file' is pointing to
+		file.createNewFile();
+	}
 		
 		Scanner taskScanner = new Scanner(System.in);
-		String task = "";
-		
+		StringBuilder task = new StringBuilder();
 		addTask:
-		while (true){										// Basic [user input] -> [save to ArrayList]
+		while (true){
+			String category;
+			String name;
+			String description;
 			char decision = ' ';
 			
 			System.out.print("Enter task: ");
-			task = taskScanner.nextLine();
-			tasks.add(task);
+			name = taskScanner.nextLine();
+			System.out.print("Enter description: ");
+			description = taskScanner.nextLine();
+			System.out.print("Enter Category: ");
+			while (true) {
+				System.out.print("Enter Category (easy/medium/hard): ");
+				category = taskScanner.nextLine();
+				if (category.equalsIgnoreCase("easy") ||
+					category.equalsIgnoreCase("medium") ||
+					category.equalsIgnoreCase("hard")) {
+					break;
+				} else {
+					System.out.println("Invalid category. Try again.");
+				}
+			}
+			task.append(name).append("|").append(description).append("|").append(category);
 			
-			fileSave();
+			fileSave(task);
+			task.setLength(0);
+			
+			Tasks t = new Tasks(name, description, category);
+			tasks.add(t);
 			
 			while(true){
 				System.out.println("y - yes\nn - no\ns - show tasks");
@@ -56,14 +75,18 @@ class methods{
 					break addTask;												// Breaks outer loop
 				}
 				else if(decision == 's'){
+					readFile("tasks.txt");
 					for (int i = 0; i < tasks.size(); i ++){					// Iterates through the ArrayList
-						System.out.println((i+1) + ". " + tasks.get(i));		// Prints all saved tasks in a list
+						Tasks t = tasks.get(i);
+						System.out.println((i+1) + ". " + t.getName() + " - " + t.getCategory() + "\n" + t.getDescription());
 					}
 				}
 				else if(decision == 'y'){
+					task.setLength(0);
 					break;
 				}
 			}
 		}
 	}
+	readFile("tasks.txt");
 }

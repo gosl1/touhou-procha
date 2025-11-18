@@ -17,7 +17,7 @@ public class Tasks {
         return description;
     }
     
-    public String category(){
+    public String getCategory(){
         return category;
     }
 
