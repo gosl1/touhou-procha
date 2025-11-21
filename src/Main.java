@@ -4,6 +4,7 @@ import java.util.*;
 public class Main {
     
     public static void main( String[] args) throws IOException{
+		methods.readFile("tasks.txt");
 		Scanner taskScanner = new Scanner(System.in);
 		addTask:
         while (true){
@@ -39,7 +40,6 @@ public class Main {
 					break addTask;												// Breaks outer loop
 				}
 				else if(decision == 's'){
-					methods.readFile("tasks.txt");
 					for (int i = 0; i < methods.tasks.size(); i ++){					// Iterates through the ArrayList
 						Tasks t = methods.tasks.get(i);
 						System.out.println((i+1) + ". " + t.getName() + " - " + t.getCategory() + "\n" + t.getDescription());
