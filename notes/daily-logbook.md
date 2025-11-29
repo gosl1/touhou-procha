@@ -7,3 +7,6 @@ Making reimu dialogue
 11/17/25
 
 Trying to learn about enum
+
+11/30/25
+Surprise, it has been close to half a month of no progress. No problem.

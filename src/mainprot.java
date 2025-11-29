@@ -1,10 +1,10 @@
+package touhou;
 import java.io.*;
 import java.util.*;
-
 public class Main {
     
     public static void main( String[] args) throws IOException{
-		methods.readFile("tasks.txt");
+		TaskStorage.readFile("tasks.txt");
 		Scanner taskScanner = new Scanner(System.in);
 		addTask:
         while (true){
@@ -29,7 +29,7 @@ public class Main {
 					System.out.println("Invalid category. Try again.");
 				}
 			}
-			methods.addTask(name, description, category);
+			TaskStorage.addTask(name, description, category);
 			while(true){
 				System.out.println("y - yes\nn - no\ns - show tasks");
 				System.out.print("Add more tasks?: ");
@@ -40,8 +40,8 @@ public class Main {
 					break addTask;												// Breaks outer loop
 				}
 				else if(decision == 's'){
-					for (int i = 0; i < methods.tasks.size(); i ++){					// Iterates through the ArrayList
-						Tasks t = methods.tasks.get(i);
+					for (int i = 0; i < TaskStorage.tasks.size(); i ++){					// Iterates through the ArrayList
+						Tasks t = TaskStorage.tasks.get(i);
 						System.out.println((i+1) + ". " + t.getName() + " - " + t.getCategory() + "\n" + t.getDescription());
 					}
 				}

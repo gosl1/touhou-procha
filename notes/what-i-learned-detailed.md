@@ -3,7 +3,7 @@
 - left-shift + right click on folder to open terminal immediately
 
 
-- subst P: "C:\Users\User\Documents\THEYRE ALL IN   HERE\coding-projects\TouhouProcha\touhou-procha"
+- subst P: "C:\Users\User\Documents\THEYRE ALL IN HERE\coding-projects\TouhouProcha\touhou-procha"
     this now points to the project itself whenever i call " P: "
 
 - This adds everything to the repository
@@ -23,3 +23,9 @@
     git pull origin <name of branch>
     for now, we might not be doing branches so
     git pull origin main
+
+11/30/25
+- Always test backend in main
+- Guided mistakes are better, go check references
+- Backend > UI > TaskStorage
+- Only use scanner in UI file
