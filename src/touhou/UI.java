@@ -68,7 +68,10 @@ public class UI extends JPanel {
     private void addTaskDialog() {
         JTextField nameField = new JTextField();
         JTextField descField = new JTextField();
-        JTextField catField = new JTextField();
+        JComboBox<String> catField = new JComboBox<>();
+		catField.addItem("Easy");
+		catField.addItem("Medium");
+		catField.addItem("Hard");
 
         Object[] message = {
                 "Task name:", nameField,
@@ -78,7 +81,7 @@ public class UI extends JPanel {
 
         int option = JOptionPane.showConfirmDialog(this, message, "Add Task", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
-            manager.addTask(nameField.getText(), descField.getText(), catField.getText());
+            manager.addTask(nameField.getText(), descField.getText(), (String) catField.getSelectedItem());
             refreshTaskList();
         }
     }
