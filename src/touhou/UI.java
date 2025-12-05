@@ -27,21 +27,33 @@ public class UI extends JPanel {
 
         // Buttons panel
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 5, 5, 5)); // Add one more column for roulette
+		JScrollPane buttonScroller = new JScrollPane(buttonPanel);
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+		buttonScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		buttonScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 14, 0));
 
         JButton addButton = new JButton("Add");
         JButton renameButton = new JButton("Rename");
         JButton doneButton = new JButton("Mark Done");
         JButton removeButton = new JButton("Remove");
-        JButton rouletteButton = new JButton("Roulette"); // New button
+        JButton rouletteButton = new JButton("Roulette");
+		JButton addRwButton = new JButton("Add Reward");
+		JButton prayButton = new JButton("Pray");
+		JButton historyButton = new JButton("Task History");
 
         buttonPanel.add(addButton);
         buttonPanel.add(renameButton);
         buttonPanel.add(doneButton);
         buttonPanel.add(removeButton);
         buttonPanel.add(rouletteButton);
+		buttonPanel.add(addRwButton);
+		buttonPanel.add(prayButton);
+		buttonPanel.add(historyButton);
+		
+		
 
-        add(buttonPanel, BorderLayout.SOUTH);
+        add(buttonScroller, BorderLayout.SOUTH);
 
         // Button actions
         addButton.addActionListener(e -> addTaskDialog());

@@ -1,3 +1,8 @@
+/*
+Early non-UI version of Input-Output
+** Do Not Use **
+*/
+@Deprecated
 package touhou;
 import java.io.*;
 import java.util.*;
