@@ -29,7 +29,7 @@ public class IntroPanel extends JPanel {
         startButton = new JButton("Start Program");
         startButton.setEnabled(false); 					// will be enabled after all clicks/messages
         add(startButton, BorderLayout.SOUTH);
-		ImageIcon icon = new ImageIcon(getClass().getResource("Assets/pibble.jpg"));
+		ImageIcon icon = new ImageIcon(getClass().getResource("Assets/icon.jpg"));
 		frame.setIconImage(icon.getImage());
 
         // Click anywhere to progress messages
