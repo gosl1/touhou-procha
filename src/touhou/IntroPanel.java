@@ -39,7 +39,7 @@ public class IntroPanel extends ImagePanel {
         reimuicon.setVerticalAlignment(SwingConstants.BOTTOM);
         JPanel southPanel = new JPanel(new GridBagLayout());
 		southPanel.setOpaque(false);
-		southPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		southPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		// Reimu icon on the left
