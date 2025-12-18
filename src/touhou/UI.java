@@ -6,7 +6,8 @@ import java.awt.*;
 public class UI extends JPanel {
 	
 	private CardLayout cardLayout;
-    private TaskManager manager;
+    private TaskManager taskManager;
+	private RewardManager rewardManager;
     private DefaultListModel<String> taskListModel;
 	private DefaultListModel<String> rewardListModel;
     private JList<String> taskList;
@@ -14,9 +15,11 @@ public class UI extends JPanel {
     private Roulette roulette;
 
     public UI() {
-        manager = new TaskManager();
-        manager.loadTasks(); // Load tasks at startup
-        roulette = new Roulette(manager);
+        taskManager = new TaskManager();
+		rewardManager = new RewardManager();
+        taskManager.loadTasks(); // Load tasks at startup
+		rewardManager.loadRewards();
+        roulette = new Roulette(taskManager);
         initComponents();
     }
 
@@ -93,19 +96,17 @@ public class UI extends JPanel {
 		// Row 1: lists
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		gbc.gridwidth = 2;   // spans 2 columns
-		gbc.weightx = 1;
-		gbc.weighty = 2;
-
-		leftPanel.add(taskListPanel, gbc);
-
-		// Task list column
-		gbc.gridx = 2;
-		gbc.gridy = 1;
 		gbc.gridwidth = 2;
 		gbc.weightx = 1;
-		gbc.weighty = 2;
+		gbc.weighty = 1;
+		leftPanel.add(taskListPanel, gbc);
 
+		// Reward list
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.gridwidth = 2;
+		gbc.weightx = 1;
+		gbc.weighty = 1;
 		leftPanel.add(rewardListPanel, gbc);
 
 		// Reward list column
@@ -162,6 +163,9 @@ public class UI extends JPanel {
         doneButton.addActionListener(e -> markDone());
         removeTaskButton.addActionListener(e -> removeTask());
         rouletteButton.addActionListener(e -> spinRoulette());
+		addRewardButton.addActionListener(e -> addRewardDialog());
+		removeRewardButton.addActionListener(e -> removeReward());
+		renameRewardButton.addActionListener(e -> renameRewardDialog());
 		returnButton.addActionListener(e ->
 		cardLayout.show(this, "MAIN")
 		);
@@ -173,7 +177,7 @@ public class UI extends JPanel {
 		);
 		
         refreshTaskList();
-		
+		refreshRewardList();
 		
 		add(mainMenu, "MAIN");
 		add(gambleMenu, "GAMBLE");
@@ -183,12 +187,21 @@ public class UI extends JPanel {
 
     private void refreshTaskList() {
         taskListModel.clear();
-        for (Task t : manager.getTasks()) {
+        for (Task t : taskManager.getTasks()) {
         String display = String.format("[%s] %s (%s)",
                 t.getDone() ? "X" : " ",
                 t.getName(),
                 t.getCategory());
         taskListModel.addElement(display);
+        }
+    }
+
+	private void refreshRewardList() {
+        rewardListModel.clear();
+        for (Reward r : rewardManager.getRewards()) {
+        String display = String.format("%s",
+                r.getName());
+        rewardListModel.addElement(display);
         }
     }
 
@@ -206,8 +219,22 @@ public class UI extends JPanel {
 
         int option = JOptionPane.showConfirmDialog(this, message, "Add Task", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
-            manager.addTask(nameField.getText(), (String) catField.getSelectedItem());
+            taskManager.addTask(nameField.getText(), (String) catField.getSelectedItem());
             refreshTaskList();
+        }
+    }
+	
+	private void addRewardDialog() {
+        JTextField nameField = new JTextField();
+
+        Object[] message = {
+                "Reward name:", nameField,
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "Add Reward", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            rewardManager.addReward(nameField.getText());
+            refreshRewardList();
         }
     }
 
@@ -220,8 +247,22 @@ public class UI extends JPanel {
 
         String newName = JOptionPane.showInputDialog(this, "New name:");
         if (newName != null && !newName.isEmpty()) {
-            manager.setTaskName(index, newName);
+            taskManager.setTaskName(index, newName);
             refreshTaskList();
+        }
+    }
+	
+	private void renameRewardDialog() {
+        int index = rewardList.getSelectedIndex();
+        if (index == -1) {
+            JOptionPane.showMessageDialog(this, "Select a reward to rename");
+            return;
+        }
+
+        String newName = JOptionPane.showInputDialog(this, "New name:");
+        if (newName != null && !newName.isEmpty()) {
+            rewardManager.setRewardName(index, newName);
+            refreshRewardList();
         }
     }
 
@@ -232,7 +273,7 @@ public class UI extends JPanel {
             return;
         }
 
-        manager.markTaskDone(index);
+        taskManager.markTaskDone(index);
         refreshTaskList();
     }
 
@@ -243,8 +284,19 @@ public class UI extends JPanel {
             return;
         }
 
-        manager.removeTask(index);
+        taskManager.removeTask(index);
         refreshTaskList();
+    }
+	
+	private void removeReward() {
+        int index = rewardList.getSelectedIndex();
+        if (index == -1) {
+            JOptionPane.showMessageDialog(this, "Select a reward to remove");
+            return;
+        }
+
+        rewardManager.removeReward(index);
+        refreshRewardList();
     }
 
     private void spinRoulette() {

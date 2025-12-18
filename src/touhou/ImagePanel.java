@@ -11,7 +11,12 @@ public class ImagePanel extends JPanel {
     public ImagePanel(String path) {
         background = new ImageIcon(getClass().getResource(path)).getImage();
     }
-
+	
+    public void setBackgroundImage(String path) {
+        background = new ImageIcon(getClass().getResource(path)).getImage();
+        repaint(); // important
+    }
+	
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

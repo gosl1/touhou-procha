@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class IntroPanel extends JPanel {
+public class IntroPanel extends ImagePanel {
     private JButton startButton;
     private JLabel textBubble;
     private int clickCount = 0;
@@ -19,22 +19,47 @@ public class IntroPanel extends JPanel {
     };
 
     public IntroPanel(JFrame frame) {
+		super("/touhou/Assets/IntroBG.png");
         setLayout(new BorderLayout());
-
+		
+		BubblePanel bubblePanel = new BubblePanel("Assets/DialogueBG.png");
+		
         textBubble = new JLabel(messages[0], SwingConstants.CENTER);
 		textBubble.setHorizontalAlignment(SwingConstants.CENTER);
         textBubble.setFont(new Font("Impact", Font.PLAIN, 18));
-        add(textBubble, BorderLayout.CENTER);
-
+		textBubble.setOpaque(false);
+		bubblePanel.add(textBubble);
+		
         startButton = new JButton("Start Program");
         startButton.setEnabled(false); 					// will be enabled after all clicks/messages
-        add(startButton, BorderLayout.SOUTH);
 		ImageIcon icon = new ImageIcon(getClass().getResource("Assets/icon.png"));
 		frame.setIconImage(icon.getImage());
         ImageIcon reimu = new ImageIcon(getClass().getResource("Assets/reimuintro.png"));
         JLabel reimuicon = new JLabel(reimu, SwingConstants.CENTER);
-        reimuicon.setPreferredSize(new Dimension(200, 100));
-        add(reimuicon, BorderLayout.EAST);
+        reimuicon.setVerticalAlignment(SwingConstants.BOTTOM);
+        JPanel southPanel = new JPanel(new GridBagLayout());
+		southPanel.setOpaque(false);
+		southPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		// Reimu icon on the left
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.anchor = GridBagConstraints.WEST;
+		southPanel.add(reimuicon, gbc);
+
+		// Start button on the bottom-right
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.anchor = GridBagConstraints.SOUTHEAST;
+		gbc.weightx = 1.0;  // push button to the right
+		gbc.weighty = 1.0;  // push button to the bottom
+		gbc.fill = GridBagConstraints.NONE;
+		southPanel.add(startButton, gbc);
+
+		// Add southPanel to the bottom of main panel
+		add(bubblePanel, BorderLayout.CENTER);
+		add(southPanel, BorderLayout.SOUTH);
 
         // Click anywhere to progress messages
         addMouseListener(new MouseAdapter() {
