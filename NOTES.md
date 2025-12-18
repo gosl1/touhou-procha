@@ -19,3 +19,8 @@
 -Roulette System, Deadline System, Progress Calendar System
 -For progress calendar, user lists things that they want to accomplish each day (optional, but gives faith regardless)
 -Pomodoro system
+
+# Ideas 2
+In the office place, roulette on the right side and can view current task and task history on the right side
+put add task and add reward buttons on the bottom of the current rewards and tasks
+more faith if player does the urgent task picked by the roulette (like 2x idk)
