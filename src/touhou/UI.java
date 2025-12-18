@@ -29,7 +29,7 @@ public class UI extends JPanel {
 		JPanel gambleMenu = new ImagePanel("/touhou/Assets/RouletteBG.png");
 		gambleMenu.setLayout(new BorderLayout());
 		JPanel office = new ImagePanel("/touhou/Assets/OfficeBG.png");
-		office.setLayout(new GridBagLayout());
+		office.setLayout(new GridLayout(1, 2, 20, 0));
 		
 		JButton officeButton = new JButton("Office");
 		JButton gambleButton = new JButton("Gamble");
@@ -48,77 +48,96 @@ public class UI extends JPanel {
 		mainMenu.add(mainRightPanel, BorderLayout.EAST);
 		
 		
+		
+		JPanel leftPanel = new JPanel(new GridBagLayout());
+		leftPanel.setOpaque(false);
+		leftPanel.setPreferredSize(new Dimension(600, 0));
+		leftPanel.setMinimumSize(new Dimension(600, 0));
+
 		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(10, 10, 10, 10);
 		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 5;
-		gbc.weighty = 4;
 
 
 		taskListModel = new DefaultListModel<>();
 		rewardListModel = new DefaultListModel<>();
         taskList = new JList<>(taskListModel);
 		rewardList = new JList<>(rewardListModel);
-		// List 1
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.weighty = 2;
-		gbc.weightx = 1;
-		office.add(taskList, gbc);
-
-		// List 2
-		gbc.gridx = 1;
-		office.add(rewardList, gbc);
-		
-		
-		JButton historyButton = new JButton("Task History");
-		// Task History Button
-		gbc.weighty = 0;
-		gbc.gridx = 2;
-		office.add(historyButton, gbc);
+		JScrollPane taskScroll = new JScrollPane(taskList);
+		JScrollPane rewardScroll = new JScrollPane(rewardList);
 		
 		JButton returnButton = new JButton("Return");
-		// Task History Button
+		// return to main menu Button
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridwidth = 1;
+		gbc.weightx = 0;
+		gbc.weighty = 0;
+		gbc.anchor = GridBagConstraints.WEST;
+
+		leftPanel.add(returnButton, gbc);
+		
+		JPanel taskListPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 15));
+		taskListPanel.setOpaque(false);
+
+		JPanel rewardListPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 15));
+		rewardListPanel.setOpaque(false);
+		
+		taskScroll.setPreferredSize(new Dimension(250, 400));
+		rewardScroll.setPreferredSize(new Dimension(250, 400));
+
+		taskListPanel.add(taskScroll);
+		rewardListPanel.add(rewardScroll);
+		
+		
+		// Row 1: lists
+		gbc.gridx = 0;
 		gbc.gridy = 1;
-		office.add(returnButton, gbc);
+		gbc.gridwidth = 2;   // spans 2 columns
+		gbc.weightx = 1;
+		gbc.weighty = 2;
+
+		leftPanel.add(taskListPanel, gbc);
+
+		// Task list column
+		gbc.gridx = 2;
+		gbc.gridy = 1;
+		gbc.gridwidth = 2;
+		gbc.weightx = 1;
+		gbc.weighty = 2;
+
+		leftPanel.add(rewardListPanel, gbc);
+
+		// Reward list column
+		gbc.gridx = 1;
+		leftPanel.add(rewardListPanel, gbc);
+		
+		JPanel rightPanel = new JPanel(new GridLayout(0, 2, 10, 10));
+		rightPanel.setOpaque(false);
+		rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		
 		JButton addTaskButton = new JButton("Add Task");
-        JButton renameTaskButton = new JButton("Rename Task");
 		JButton removeTaskButton = new JButton("Remove Task");
+		JButton renameTaskButton = new JButton("Rename Task");
 		JButton doneButton = new JButton("Mark Done");
-		
-		JButton addRewardButton = new JButton("Add Reward");
-        JButton renameRewardButton = new JButton("Rename Reward");
-		JButton removeRewardButton = new JButton("Remove Reward");
-		// add task button
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		office.add(addTaskButton, gbc);
-		
-		// remove task button
-		gbc.gridx = 1;
-		office.add(removeTaskButton, gbc);
 
-		// add reward button
-		gbc.gridx = 2;
-		office.add(addRewardButton, gbc);
+		JButton addRewardButton = new JButton("Add Reward");
+		JButton removeRewardButton = new JButton("Remove Reward");
+		JButton renameRewardButton = new JButton("Rename Reward");
+
+		JButton historyButton = new JButton("Task History");
+
+		rightPanel.add(addTaskButton);
+		rightPanel.add(removeTaskButton);
+		rightPanel.add(renameTaskButton);
+		rightPanel.add(doneButton);
+		rightPanel.add(addRewardButton);
+		rightPanel.add(removeRewardButton);
+		rightPanel.add(renameRewardButton);
+		rightPanel.add(historyButton);
 		
-		// remove reward button
-		gbc.gridx = 3;
-		office.add(removeRewardButton, gbc);
-		
-		// rename task button
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		office.add(renameTaskButton, gbc);
-        
-		// mark done task button
-		gbc.gridx = 1;
-		office.add(doneButton, gbc);
-		
-		// rename reward button
-		gbc.gridx = 2;
-		office.add(renameRewardButton, gbc);
-		
+		office.add(leftPanel);
+		office.add(rightPanel);
 		
         JButton rouletteButton = new JButton("Roulette");
 		JButton prayButton = new JButton("Pray");
