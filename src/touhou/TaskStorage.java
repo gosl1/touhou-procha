@@ -66,4 +66,25 @@ public class TaskStorage {
         fileScanner.close();
         return rewards;
     }
+
+        // Add to TaskStorage.java
+    public static void saveFaith(int faith) throws IOException {
+        FileWriter writer = new FileWriter("faith.txt");
+        writer.write(String.valueOf(faith));
+        writer.close();
+    }
+
+    public static int loadFaith() throws IOException {
+        File file = new File("faith.txt");
+        if (!file.exists()) return 0;
+        
+        Scanner scanner = new Scanner(file);
+        if (scanner.hasNextInt()) {
+            int faith = scanner.nextInt();
+            scanner.close();
+            return faith;
+        }
+        scanner.close();
+        return 0;
+    }
 }

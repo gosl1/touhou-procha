@@ -1,27 +1,24 @@
 package touhou;
 
-// Create Shrine.java
 import java.util.Random;
 import java.util.List;
 
 public class Shrine {
     private RewardManager rewardManager;
     private Random random;
-    private static final int PULL_COST = 100; // Faith cost per pull
-    private static final double REWARD_CHANCE = 0.2; // 20% chance
+    private static final int PULL_COST = 100;
+    private static final double REWARD_CHANCE = 0.2;
     
     public Shrine(RewardManager rewardManager) {
         this.rewardManager = rewardManager;
         this.random = new Random();
     }
     
-    public PullResult pull(int faithAmount) {
-        if (faithAmount < PULL_COST) {
+    // CHANGED: Remove faithAmount parameter, just check if user can afford
+    public PullResult pull(int currentFaith) {
+        if (currentFaith < PULL_COST) {
             return new PullResult(false, null, "Not enough faith!");
         }
-        
-        // Spend faith
-        faithAmount -= PULL_COST;
         
         // 20% chance to get a random reward
         if (random.nextDouble() <= REWARD_CHANCE) {
