@@ -108,10 +108,6 @@ public class UI extends JPanel {
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		leftPanel.add(rewardListPanel, gbc);
-
-		// Reward list column
-		gbc.gridx = 1;
-		leftPanel.add(rewardListPanel, gbc);
 		
 		JPanel rightPanel = new JPanel(new GridLayout(0, 2, 10, 10));
 		rightPanel.setOpaque(false);
