@@ -9,12 +9,12 @@ public class IntroPanel extends JPanel {
     private JLabel textBubble;
     private int clickCount = 0;
     private String[] messages = {
-		"I know you're grateful and all but... Are you really doing this?",
-		"- Yes",
-		"Fine, welcome to Gensokyo.",
-		"The shrine's falling apart—not just the building, but the divine power too.",
+		"<html>I know you're grateful and all but... Are you really doing this?<html>",
+		"Yes",
+		"<html>Fine, welcome to Gensokyo.<html>",
+		"<html>The shrine's falling apart—not just the building, but the divine power too.<html>",
 		"<html>Without enough faith from visitors, the barriers weaken, and all the youkai around just make things worse.<html>",
-		"- ...",
+		"...",
 		"<html>You don't have to do anything grand. All you have to do is pray to the shrine and offer your faith.<html>"
     };
 
@@ -23,7 +23,7 @@ public class IntroPanel extends JPanel {
 
         textBubble = new JLabel(messages[0], SwingConstants.CENTER);
 		textBubble.setHorizontalAlignment(SwingConstants.CENTER);
-        textBubble.setFont(new Font("Arial", Font.PLAIN, 18));
+        textBubble.setFont(new Font("Impact", Font.PLAIN, 18));
         add(textBubble, BorderLayout.CENTER);
 
         startButton = new JButton("Start Program");
@@ -31,12 +31,22 @@ public class IntroPanel extends JPanel {
         add(startButton, BorderLayout.SOUTH);
 		ImageIcon icon = new ImageIcon(getClass().getResource("Assets/icon.png"));
 		frame.setIconImage(icon.getImage());
+        ImageIcon reimu = new ImageIcon(getClass().getResource("Assets/reimuintro.png"));
+        JLabel reimuicon = new JLabel(reimu, SwingConstants.CENTER);
+        reimuicon.setPreferredSize(new Dimension(200, 100));
+        add(reimuicon, BorderLayout.EAST);
 
         // Click anywhere to progress messages
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (clickCount < messages.length - 1) {
                     clickCount++;
+                    if(clickCount == 1){
+                        //newjbutton that says yes and can only proceed if this is pressed
+                    }
+                    if(clickCount == 4){
+                        //newjbutton that says ... and can only proceed if this is pressed
+                    }
                     textBubble.setText(messages[clickCount]);	// iterates through all the messages in the intro messages array
                 } else {										// once all the dialogue has been displayed, lets the player click the start button to start the program
                     startButton.setEnabled(true);

@@ -165,18 +165,16 @@ public class UI extends JPanel {
     private void refreshTaskList() {
         taskListModel.clear();
         for (Task t : manager.getTasks()) {
-            String display = String.format("[%s] %s - %s (%s)",
-                    t.getDone() ? "X" : " ",
-                    t.getName(),
-                    t.getDescription(),
-                    t.getCategory());
-            taskListModel.addElement(display);
+        String display = String.format("[%s] %s (%s)",
+                t.getDone() ? "X" : " ",
+                t.getName(),
+                t.getCategory());
+        taskListModel.addElement(display);
         }
     }
 
     private void addTaskDialog() {
         JTextField nameField = new JTextField();
-        JTextField descField = new JTextField();
         JComboBox<String> catField = new JComboBox<>();
 		catField.addItem("Easy");
 		catField.addItem("Medium");
@@ -184,13 +182,12 @@ public class UI extends JPanel {
 
         Object[] message = {
                 "Task name:", nameField,
-                "Description:", descField,
                 "Category:", catField
         };
 
         int option = JOptionPane.showConfirmDialog(this, message, "Add Task", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
-            manager.addTask(nameField.getText(), descField.getText(), (String) catField.getSelectedItem());
+            manager.addTask(nameField.getText(), (String) catField.getSelectedItem());
             refreshTaskList();
         }
     }
@@ -238,7 +235,7 @@ public class UI extends JPanel {
         } else {
             JOptionPane.showMessageDialog(this,
                     "Roulette picked:\n" +
-                            t.getName() + " - " + t.getDescription() + " (" + t.getCategory() + ")");
+                            t.getName() + " - " + " (" + t.getCategory() + ")");
         }
     }
 }

@@ -1,13 +1,16 @@
 package touhou;
 public class Task {
     private String taskName;
-    private String description;
+    // REMOVED: private String description; // Description field removed
     private String category;
     private boolean done;
 
-    public Task(String taskname, String description, String category){
+    // REMOVED: description parameter from constructor
+    // BEFORE: public Task(String taskname, String description, String category){
+    // AFTER: Only name and category
+    public Task(String taskname, String category){
         this.taskName = taskname;
-        this.description = description;
+        // REMOVED: this.description = description; // No more description
         this.category = category;
         this.done = false;
     }
@@ -16,9 +19,12 @@ public class Task {
     public String getName(){
         return taskName;
     }
-    public String getDescription(){
-        return description;
-    }
+    
+    // REMOVED: getDescription() method
+    // public String getDescription(){
+    //     return description;
+    // }
+    
     public String getCategory(){
         return category;
     }
@@ -31,9 +37,10 @@ public class Task {
         this.taskName = name;
     }
 
-    public void setDescription(String desc){
-        this.description = desc;
-    }
+    // REMOVED: setDescription() method
+    // public void setDescription(String desc){
+    //     this.description = desc;
+    // }
 
     public void setCategory(String category){
         this.category = category;
@@ -41,7 +48,4 @@ public class Task {
     public void markDone(){
         this.done = true;
     }
-
-    //Plan to make a separate class that you can access the set methods
-
 }

@@ -1,36 +1,45 @@
 package touhou;
 public class Reward {
     private String rewardName;
-    private String description;
-    private String category;
+    // REMOVED: private String description; // Description field removed
+    // REMOVED: private String category; // Category field removed
 
-    public Reward(String rewardName, String description, String category){
+    // REMOVED: description and category parameters from constructor
+    // BEFORE: public Reward(String rewardName, String description, String category){
+    // AFTER: Only name
+    public Reward(String rewardName){
         this.rewardName = rewardName;
-        this.description = description;
-        this.category = category;
+        // REMOVED: this.description = description; // No more description
+        // REMOVED: this.category = category; // No more category
     }
 
-    //Getters
+    //Getter
     public String getName(){
         return rewardName;
     }
-    public String getDescription(){
-        return description;
-    }
-    public String getCategory(){
-        return category;
-    }
+    
+    // REMOVED: getDescription() method
+    // public String getDescription(){
+    //     return description;
+    // }
+    
+    // REMOVED: getCategory() method
+    // public String getCategory(){
+    //     return category;
+    // }
 
-    //Setters
+    //Setter
     public void setName(String name){
         this.rewardName = name;
     }
 
-    public void setDescription(String desc){
-        this.description = desc;
-    }
+    // REMOVED: setDescription() method
+    // public void setDescription(String desc){
+    //     this.description = desc;
+    // }
 
-    public void setCategory(String category){
-        this.category = category;
-    }
+    // REMOVED: setCategory() method
+    // public void setCategory(String category){
+    //     this.category = category;
+    // }
 }

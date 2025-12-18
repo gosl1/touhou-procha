@@ -26,8 +26,12 @@ public class RewardManager {
         }
     }
 
-    public void addReward(String title, String description, String category) {
-        rewards.add(new Reward(title, description, category));
+    // REMOVED: description and category parameters from addReward method
+    // BEFORE: public void addReward(String title, String description, String category) {
+    // AFTER: Only title
+    public void addReward(String title) {
+        // CHANGED: Reward constructor now only takes 1 parameter instead of 3
+        rewards.add(new Reward(title));
         saveRewards(); // auto-save after adding
     }
 

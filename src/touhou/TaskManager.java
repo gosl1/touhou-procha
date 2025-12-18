@@ -26,8 +26,12 @@ public class TaskManager {
         }
     }
 
-    public void addTask(String title, String description, String category) {
-        tasks.add(new Task(title, description, category));
+    // REMOVED: description parameter from addTask method
+    // BEFORE: public void addTask(String title, String description, String category) {
+    // AFTER: Only title and category
+    public void addTask(String title, String category) {
+        // CHANGED: Task constructor now only takes 2 parameters instead of 3
+        tasks.add(new Task(title, category));
         saveTasks(); // auto-save after adding
     }
 
