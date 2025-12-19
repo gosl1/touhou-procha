@@ -85,21 +85,22 @@ public class UI extends JPanel {
 		
 		// Faith counter in bubble
 		faithCounter = new JLabel("Faith: 0", SwingConstants.CENTER);
-		faithCounter.setFont(new Font("Lucida Sans", Font.PLAIN, 18));
+		faithCounter.setFont(new Font("Impact", Font.PLAIN, 18));
 		faithCounter.setForeground(Color.BLACK);
 		faithCounter.setOpaque(false);
-		faithCounter.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25));
+		faithCounter.setBorder(BorderFactory.createEmptyBorder(8, 25, 8, 25));
 		
 		BubblePanel faithBubble = new BubblePanel("Assets/DialogueBG.png");
-		faithBubble.setPreferredSize(new Dimension(220, 80));
+		faithBubble.setPreferredSize(new Dimension(220, 60)); // Reduced from 80 to 60
+		faithBubble.setMaximumSize(new Dimension(220, 60)); // Also limit maximum
 		faithBubble.add(faithCounter);
 		
 		mainRightPanel.add(faithBubble);
 		
 		// Menu buttons
-		JButton officeButton = new JButton("Office");
-		JButton rouletteButton = new JButton("Roulette");
-		JButton shrineButton = new JButton("Shrine");
+		JButton officeButton = new BubbleButton("Office");
+		JButton rouletteButton = new BubbleButton("Roulette");
+		JButton shrineButton = new BubbleButton("Shrine");
 		
 		mainRightPanel.add(officeButton);
 		mainRightPanel.add(rouletteButton);
@@ -371,7 +372,7 @@ public class UI extends JPanel {
 	private void refreshHistoryList() {
 		historyListModel.clear();
 		try {
-			java.util.ArrayList<String> history = TaskStorage.loadHistory();
+			java.util.ArrayList<String> history = Storage.loadHistory();
 			for (String entry : history) {
 				historyListModel.addElement(entry);
 			}
@@ -480,7 +481,7 @@ public class UI extends JPanel {
 		
 		// Save to history
 		try {
-			TaskStorage.saveHistory(historyEntry);
+			Storage.saveHistory(historyEntry);
 		} catch (java.io.IOException e) {
 			System.out.println("Failed to save history: " + e.getMessage());
 		}

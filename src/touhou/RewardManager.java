@@ -12,7 +12,7 @@ public class RewardManager {
 
     public void loadRewards() {
         try {
-            rewards = TaskStorage.readReward("rewards.txt");
+            rewards = Storage.readReward("rewards.txt");
         } catch (IOException e) {
             System.out.println("Failed to load rewards: " + e.getMessage());
         }
@@ -20,15 +20,13 @@ public class RewardManager {
 
     public void saveRewards() {
         try {
-            TaskStorage.saveReward(rewards);
+            Storage.saveReward(rewards);
         } catch (IOException e) {
             System.out.println("Failed to save rewards: " + e.getMessage());
         }
     }
 
-    // REMOVED: description and category parameters from addReward method
-    // BEFORE: public void addReward(String title, String description, String category) {
-    // AFTER: Only title
+
     public void addReward(String title) {
         // CHANGED: Reward constructor now only takes 1 parameter instead of 3
         rewards.add(new Reward(title));

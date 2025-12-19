@@ -3,7 +3,7 @@ package touhou;
 import java.io.*;
 import java.util.*;
 
-public class TaskStorage {
+public class Storage {
 
     public static void saveTask(ArrayList<Task> tasks) throws IOException {
         FileWriter writer = new FileWriter("tasks.txt");

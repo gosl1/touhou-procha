@@ -12,7 +12,7 @@ public class TaskManager {
 
     public void loadTasks() {
         try {
-            tasks = TaskStorage.readTask("tasks.txt");
+            tasks = Storage.readTask("tasks.txt");
         } catch (IOException e) {
             System.out.println("Failed to load tasks: " + e.getMessage());
         }
@@ -20,7 +20,7 @@ public class TaskManager {
 
     public void saveTasks() {
         try {
-            TaskStorage.saveTask(tasks);
+            Storage.saveTask(tasks);
         } catch (IOException e) {
             System.out.println("Failed to save tasks: " + e.getMessage());
         }

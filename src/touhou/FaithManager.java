@@ -7,7 +7,7 @@ public class FaithManager {
     
     public FaithManager() {
         try {
-            faithAmount = TaskStorage.loadFaith();
+            faithAmount = Storage.loadFaith();
         } catch (IOException e) {
             System.out.println("Failed to load faith: " + e.getMessage());
             faithAmount = 0;
@@ -34,7 +34,7 @@ public class FaithManager {
     
     private void saveFaith() {
         try {
-            TaskStorage.saveFaith(faithAmount);
+            Storage.saveFaith(faithAmount);
         } catch (IOException e) {
             System.out.println("Failed to save faith: " + e.getMessage());
         }
