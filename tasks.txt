@@ -1,0 +1,3 @@
+pib|Easy
+PLUH|Medium
+PIBBLE|Hard

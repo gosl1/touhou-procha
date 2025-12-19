@@ -19,7 +19,8 @@ public class UI extends JPanel {
 		rewardManager = new RewardManager();
         taskManager.loadTasks(); // Load tasks at startup
 		rewardManager.loadRewards();
-        roulette = new Roulette(taskManager);
+		//NEW
+        roulette = new Roulette(taskManager, rewardManager);
         initComponents();
     }
 
@@ -181,16 +182,28 @@ public class UI extends JPanel {
 		cardLayout.show(this, "MAIN");
     }
 
-    private void refreshTaskList() {
-        taskListModel.clear();
-        for (Task t : taskManager.getTasks()) {
-        String display = String.format("[%s] %s (%s)",
-                t.getDone() ? "X" : " ",
-                t.getName(),
-                t.getCategory());
-        taskListModel.addElement(display);
-        }
-    }
+	private void refreshTaskList() {
+		taskListModel.clear();
+		for (Task t : taskManager.getTasks()) {
+			// Calculate faith value for display
+			int baseFaith = 10;
+			if (t.getCategory().equals("Medium")) baseFaith = 25;
+			else if (t.getCategory().equals("Hard")) baseFaith = 50;
+			
+			int faithValue = t.isRouletteBoosted() ? baseFaith * 3 : baseFaith;
+			
+			// Add star for boosted tasks
+			String boostIndicator = t.isRouletteBoosted() ? "★ " : "";
+			
+			String display = String.format("%s[%s] %s (%s) - %d faith",
+				boostIndicator,
+				t.getDone() ? "X" : " ",
+				t.getName(),
+				t.getCategory(),
+				faithValue);
+			taskListModel.addElement(display);
+		}
+	}
 
 	private void refreshRewardList() {
         rewardListModel.clear();
@@ -295,14 +308,63 @@ public class UI extends JPanel {
         refreshRewardList();
     }
 
-    private void spinRoulette() {
-        Task t = roulette.spin();
-        if (t == null) {
-            JOptionPane.showMessageDialog(this, "No tasks available!");
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    "Roulette picked:\n" +
-                            t.getName() + " - " + " (" + t.getCategory() + ")");
-        }
-    }
+	private void spinRoulette() {
+		Object result = roulette.spin();
+		
+		if (result == null) {
+			JOptionPane.showMessageDialog(this, "No tasks available!");
+			return;
+		}
+		
+		if (result instanceof Reward) {
+			// Landed on a reward (20% chance)
+			Reward reward = (Reward) result;
+			
+			// Load the gift icon image
+			ImageIcon giftIcon = new ImageIcon(getClass().getResource("/touhou/Assets/gift.png"));
+			
+			// Resize if needed (optional)
+			Image scaledImage = giftIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+			giftIcon = new ImageIcon(scaledImage);
+			
+			// Create a panel with the image and text
+			JPanel panel = new JPanel();
+			panel.setLayout(new BorderLayout());
+			
+			JLabel imageLabel = new JLabel(giftIcon);
+			imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			JLabel textLabel = new JLabel(
+				"<html><center>🎉 LUCKY SPIN! 🎉<br><br>" +
+				"Roulette landed on a <b>REWARD</b>!<br><br>" +
+				"You won: <font color='green'>" + reward.getName() + "</font><br><br>" +
+				"(20% chance to land on rewards)</center></html>"
+			);
+			textLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			panel.add(imageLabel, BorderLayout.CENTER);
+			panel.add(textLabel, BorderLayout.SOUTH);
+			
+			JOptionPane.showMessageDialog(this, panel, "Reward Won!", JOptionPane.INFORMATION_MESSAGE);
+		} 
+		else if (result instanceof Task) {
+			// Landed on a task (80% chance)
+			Task t = (Task) result;
+			
+			// Calculate faith value for display
+			int baseFaith = 10;
+			if (t.getCategory().equals("Medium")) baseFaith = 25;
+			else if (t.getCategory().equals("Hard")) baseFaith = 50;
+			
+			int boostedFaith = baseFaith * 3;  // 300% boost
+			
+			String message = "Roulette picked a TASK:\n\n" +
+							t.getName() + " (" + t.getCategory() + ")\n\n" +
+							"Normal faith: " + baseFaith + "\n" +
+							"★ Boosted faith: " + boostedFaith + " ★\n\n";
+			
+			JOptionPane.showMessageDialog(this, message);
+			refreshTaskList();  // Update to show ★
+		}
+	}
 }

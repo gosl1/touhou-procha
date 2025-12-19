@@ -6,7 +6,7 @@ import java.util.List;
 public class Shrine {
     private RewardManager rewardManager;
     private Random random;
-    private static final int PULL_COST = 100;
+    private static final int PULL_COST = 30;
     private static final double REWARD_CHANCE = 0.2;
     
     public Shrine(RewardManager rewardManager) {
