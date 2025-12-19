@@ -35,6 +35,9 @@ public class UI extends JPanel {
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		
+		gbc.insets = new Insets(10, 10, 10, 10); 
+		gbc.fill = GridBagConstraints.BOTH;
+		
 		JPanel gambleMenu = new ImagePanel("/touhou/Assets/RouletteBG.png");
 		gambleMenu.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
 		
@@ -291,15 +294,62 @@ public class UI extends JPanel {
     }
 
     private void markDone() {
-        int index = taskList.getSelectedIndex();
-        if (index == -1) {
-            JOptionPane.showMessageDialog(this, "Select a task to mark done");
-            return;
-        }
+		int index = taskList.getSelectedIndex();
+		if (index == -1) {
+			JOptionPane.showMessageDialog(this, "Select a task to mark done");
+			return;
+		}
 
-        taskManager.markTaskDone(index);
-        refreshTaskList();
-    }
+		// Get the task
+		Task task = taskManager.getTasks().get(index);
+		
+		// Check if already done
+		if (task.getDone()) {
+			JOptionPane.showMessageDialog(this, "Task is already completed!");
+			return;
+		}
+		
+		// Calculate faith earned
+		int faithEarned = 0;
+		String category = task.getCategory();
+		
+		// Base faith values
+		if (category.equals("Easy")) {
+			faithEarned = 10;
+		} else if (category.equals("Medium")) {
+			faithEarned = 25;
+		} else if (category.equals("Hard")) {
+			faithEarned = 50;
+		}
+		
+		// Apply 300% boost if roulette boosted
+		if (task.isRouletteBoosted()) {
+			faithEarned *= 3; // 300% increase
+		}
+		
+		// Mark task as done
+		taskManager.markTaskDone(index);
+		
+		// Add faith to faith manager
+		faithManager.addFaith(faithEarned);
+		
+		// Reset roulette boost
+		task.setRouletteBoosted(false);
+		
+		// Update displays
+		refreshTaskList();
+		refreshFaithCounter();
+		
+		// Show message with faith earned
+		String boostMessage = task.isRouletteBoosted() ? 
+			"\n(300% Roulette Boost Applied!)" : "";
+		
+		JOptionPane.showMessageDialog(this, 
+			"Task completed!\n" +
+			"Task: " + task.getName() + " (" + category + ")\n" +
+			"Faith earned: " + faithEarned + boostMessage + "\n" +
+        "Total faith: " + faithManager.getFaith());
+	}
 
     private void removeTask() {
         int index = taskList.getSelectedIndex();
