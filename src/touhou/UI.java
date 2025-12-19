@@ -35,16 +35,19 @@ public class UI extends JPanel {
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		
+		/*====================================================================== */
 		JPanel gambleMenu = new ImagePanel("/touhou/Assets/ShrineBG.png");
 		gambleMenu.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
-		
 		
 		JPanel office = new ImagePanel("/touhou/Assets/OfficeBG.png");
 		office.setLayout(new GridLayout(1, 2, 20, 0));
 		
+		/*====================================================================== */
 		JButton officeButton = new JButton("Office");
 		JButton gambleButton = new JButton("Gamble");
+		
 
+		/*====================================================================== */
 		JPanel leftPanel = new JPanel(new GridBagLayout());
 		leftPanel.setOpaque(false);
 		leftPanel.setPreferredSize(new Dimension(600, 0));
