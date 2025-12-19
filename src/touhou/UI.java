@@ -5,6 +5,7 @@ import java.awt.*;
 
 public class UI extends JPanel {
 	
+	private FaithManager faithManager;
 	private CardLayout cardLayout;
     private TaskManager taskManager;
 	private RewardManager rewardManager;
@@ -13,54 +14,41 @@ public class UI extends JPanel {
     private JList<String> taskList;
 	private JList<String> rewardList;
     private Roulette roulette;
+	private JLabel faithCounter;
+	
 
     public UI() {
+		faithManager = new FaithManager();
         taskManager = new TaskManager();
 		rewardManager = new RewardManager();
         taskManager.loadTasks(); // Load tasks at startup
 		rewardManager.loadRewards();
-        roulette = new Roulette(taskManager);
+        roulette = new Roulette(taskManager, rewardManager);
         initComponents();
     }
 
     private void initComponents() {
 		cardLayout = new CardLayout();
 		setLayout(cardLayout);
-
 		JPanel mainMenu = new ImagePanel("/touhou/Assets/MainMenuBG.png");
 		mainMenu.setLayout(new BorderLayout());
+		
+		GridBagConstraints gbc = new GridBagConstraints();
+		
 		JPanel gambleMenu = new ImagePanel("/touhou/Assets/RouletteBG.png");
-		gambleMenu.setLayout(new BorderLayout());
+		gambleMenu.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
+		
+		
 		JPanel office = new ImagePanel("/touhou/Assets/OfficeBG.png");
 		office.setLayout(new GridLayout(1, 2, 20, 0));
 		
 		JButton officeButton = new JButton("Office");
 		JButton gambleButton = new JButton("Gamble");
-		
-		JPanel mainLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		mainLeftPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		mainLeftPanel.add(officeButton);
 
-		JPanel mainRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		mainRightPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		mainRightPanel.add(gambleButton);
-		
-		mainLeftPanel.setOpaque(false);
-		mainRightPanel.setOpaque(false);
-		mainMenu.add(mainLeftPanel, BorderLayout.WEST);
-		mainMenu.add(mainRightPanel, BorderLayout.EAST);
-		
-		
-		
 		JPanel leftPanel = new JPanel(new GridBagLayout());
 		leftPanel.setOpaque(false);
 		leftPanel.setPreferredSize(new Dimension(600, 0));
 		leftPanel.setMinimumSize(new Dimension(600, 0));
-
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(10, 10, 10, 10);
-		gbc.fill = GridBagConstraints.BOTH;
-
 
 		taskListModel = new DefaultListModel<>();
 		rewardListModel = new DefaultListModel<>();
@@ -137,22 +125,45 @@ public class UI extends JPanel {
 		office.add(rightPanel);
 		
         JButton rouletteButton = new JButton("Roulette");
+		gambleMenu.add(rouletteButton);
 		JButton prayButton = new JButton("Pray");
 		
-		JPanel gambleLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		gambleLeftPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		gambleLeftPanel.add(rouletteButton);
-
-		JPanel gambleRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		gambleRightPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		gambleRightPanel.add(prayButton);
-		
+		JPanel mainLeftPanel = new JPanel(new BorderLayout());
 		mainLeftPanel.setOpaque(false);
-		mainRightPanel.setOpaque(false);
-		gambleMenu.add(gambleLeftPanel, BorderLayout.WEST);
-		gambleMenu.add(gambleRightPanel, BorderLayout.EAST);
 		
+		ImageIcon reimu = new ImageIcon(getClass().getResource("Assets/reimuintro.png"));
+		JLabel reimuicon = new JLabel(reimu);
+		reimuicon.setHorizontalAlignment(SwingConstants.LEFT);
+		reimuicon.setVerticalAlignment(SwingConstants.BOTTOM);
+		
+		mainLeftPanel.add(reimuicon, BorderLayout.SOUTH);
+		
+		JPanel mainRightPanel = new JPanel(new GridLayout(0, 1, 15, 15));
+		mainRightPanel.setOpaque(false);
+		mainRightPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+		
+		faithCounter = new JLabel("Faith: 0", SwingConstants.CENTER);
+		faithCounter.setFont(new Font("Impact", Font.PLAIN, 18));
+		faithCounter.setForeground(Color.BLACK);
+		faithCounter.setOpaque(false);
+		
+		BubblePanel faithBubble = new BubblePanel("Assets/DialogueBG.png");
+		faithBubble.setPreferredSize(new Dimension(220, 80)); // tweak to taste
 
+		// Padding so text doesn't touch edges
+		faithCounter.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25));
+
+		faithBubble.add(faithCounter);
+		
+		mainRightPanel.add(faithBubble);
+		
+		mainRightPanel.add(officeButton);
+		mainRightPanel.add(gambleButton);
+		mainRightPanel.add(prayButton);
+
+		mainMenu.add(mainLeftPanel, BorderLayout.WEST);
+		mainMenu.add(mainRightPanel, BorderLayout.EAST);
+		
         // Button actions
         addTaskButton.addActionListener(e -> addTaskDialog());
         renameTaskButton.addActionListener(e -> renameTaskDialog());
@@ -182,15 +193,27 @@ public class UI extends JPanel {
     }
 
     private void refreshTaskList() {
-        taskListModel.clear();
-        for (Task t : taskManager.getTasks()) {
-        String display = String.format("[%s] %s (%s)",
-                t.getDone() ? "X" : " ",
-                t.getName(),
-                t.getCategory());
-        taskListModel.addElement(display);
-        }
-    }
+		taskListModel.clear();
+		for (Task t : taskManager.getTasks()) {
+			// Calculate faith value for display
+			int baseFaith = 10;
+			if (t.getCategory().equals("Medium")) baseFaith = 25;
+			else if (t.getCategory().equals("Hard")) baseFaith = 50;
+			
+			int faithValue = t.isRouletteBoosted() ? baseFaith * 3 : baseFaith;
+			
+			// Add star for boosted tasks
+			String boostIndicator = t.isRouletteBoosted() ? "★ " : "";
+			
+			String display = String.format("%s[%s] %s (%s) - %d faith",
+				boostIndicator,
+				t.getDone() ? "X" : " ",
+				t.getName(),
+				t.getCategory(),
+				faithValue);
+			taskListModel.addElement(display);
+		}
+	}
 
 	private void refreshRewardList() {
         rewardListModel.clear();
@@ -200,6 +223,11 @@ public class UI extends JPanel {
         rewardListModel.addElement(display);
         }
     }
+	
+	private void refreshFaithCounter(){
+		int faithNum = faithManager.getFaith();
+		faithCounter.setText("Faith: " + String.valueOf(faithNum));
+	}
 
     private void addTaskDialog() {
         JTextField nameField = new JTextField();
@@ -296,13 +324,63 @@ public class UI extends JPanel {
     }
 
     private void spinRoulette() {
-        Task t = roulette.spin();
-        if (t == null) {
-            JOptionPane.showMessageDialog(this, "No tasks available!");
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    "Roulette picked:\n" +
-                            t.getName() + " - " + " (" + t.getCategory() + ")");
-        }
-    }
+		Object result = roulette.spin();
+		
+		if (result == null) {
+			JOptionPane.showMessageDialog(this, "No tasks available!");
+			return;
+		}
+		
+		if (result instanceof Reward) {
+			// Landed on a reward (20% chance)
+			Reward reward = (Reward) result;
+			
+			// Load the gift icon image
+			ImageIcon giftIcon = new ImageIcon(getClass().getResource("/touhou/Assets/gift.png"));
+			
+			// Resize if needed (optional)
+			Image scaledImage = giftIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+			giftIcon = new ImageIcon(scaledImage);
+			
+			// Create a panel with the image and text
+			JPanel panel = new JPanel();
+			panel.setLayout(new BorderLayout());
+			
+			JLabel imageLabel = new JLabel(giftIcon);
+			imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			JLabel textLabel = new JLabel(
+				"<html><center>🎉 LUCKY SPIN! 🎉<br><br>" +
+				"Roulette landed on a <b>REWARD</b>!<br><br>" +
+				"You won: <font color='green'>" + reward.getName() + "</font><br><br>" +
+				"(20% chance to land on rewards)</center></html>"
+			);
+			textLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			panel.add(imageLabel, BorderLayout.CENTER);
+			panel.add(textLabel, BorderLayout.SOUTH);
+			
+			JOptionPane.showMessageDialog(this, panel, "Reward Won!", JOptionPane.INFORMATION_MESSAGE);
+		} 
+		else if (result instanceof Task) {
+			// Landed on a task (80% chance)
+			Task t = (Task) result;
+			
+			// Calculate faith value for display
+			int baseFaith = 10;
+			if (t.getCategory().equals("Medium")) baseFaith = 25;
+			else if (t.getCategory().equals("Hard")) baseFaith = 50;
+			
+			int boostedFaith = baseFaith * 3;  // 300% boost
+			
+			String message = "Roulette picked a TASK:\n\n" +
+							t.getName() + " (" + t.getCategory() + ")\n\n" +
+							"Normal faith: " + baseFaith + "\n" +
+							"★ Boosted faith: " + boostedFaith + " ★\n\n";
+			
+			JOptionPane.showMessageDialog(this, message);
+			refreshTaskList();  // Update to show ★
+		}
+	}
 }
+
