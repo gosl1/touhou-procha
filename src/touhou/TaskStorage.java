@@ -8,9 +8,6 @@ public class TaskStorage {
     public static void saveTask(ArrayList<Task> tasks) throws IOException {
         FileWriter writer = new FileWriter("tasks.txt");
         for (Task t : tasks) {
-            // REMOVED: description field from save
-            // BEFORE: writer.write(t.getName() + "|" + t.getDescription() + "|" + t.getCategory() + "\n");
-            // AFTER: Only name and category
             writer.write(t.getName() + "|" + t.getCategory() + "\n");
         }
         writer.close();
@@ -19,15 +16,11 @@ public class TaskStorage {
     public static void saveReward(ArrayList<Reward> rewards) throws IOException {
         FileWriter writer = new FileWriter("rewards.txt");
         for (Reward r : rewards) {
-            // REMOVED: description and category fields from save
-            // BEFORE: writer.write(r.getName() + "|" + r.getDescription() + "|" + r.getCategory() + "\n");
-            // AFTER: Only name
             writer.write(r.getName() + "\n");
         }
         writer.close();
     }
 
-    // Read tasks from file and return them as a list
     public static ArrayList<Task> readTask(String fileName) throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(fileName);
@@ -37,9 +30,6 @@ public class TaskStorage {
         while (fileScanner.hasNextLine()) {
             String line = fileScanner.nextLine();
             String[] taskData = line.split("\\|");
-            // CHANGED: from 3 fields to 2 fields (removed description)
-            // BEFORE: if (taskData.length == 3) { tasks.add(new Task(taskData[0], taskData[1], taskData[2])); }
-            // AFTER: Only name and category
             if (taskData.length == 2) {
                 tasks.add(new Task(taskData[0], taskData[1]));
             }
@@ -57,9 +47,6 @@ public class TaskStorage {
         while (fileScanner.hasNextLine()) {
             String line = fileScanner.nextLine().trim();
             if (!line.isEmpty()) {
-                // REMOVED: description and category parsing
-                // BEFORE: String[] rewardData = line.split("\\|"); if (rewardData.length == 3) { rewards.add(new Reward(rewardData[0], rewardData[1], rewardData[2])); }
-                // AFTER: Only name
                 rewards.add(new Reward(line));
             }
         }
@@ -67,7 +54,6 @@ public class TaskStorage {
         return rewards;
     }
 
-        // Add to TaskStorage.java
     public static void saveFaith(int faith) throws IOException {
         FileWriter writer = new FileWriter("faith.txt");
         writer.write(String.valueOf(faith));
@@ -86,5 +72,28 @@ public class TaskStorage {
         }
         scanner.close();
         return 0;
+    }
+
+    // Task history methods
+    public static void saveHistory(String historyEntry) throws IOException {
+        FileWriter writer = new FileWriter("history.txt", true); // append mode
+        writer.write(historyEntry + "\n");
+        writer.close();
+    }
+
+    public static ArrayList<String> loadHistory() throws IOException {
+        ArrayList<String> history = new ArrayList<>();
+        File file = new File("history.txt");
+        if (!file.exists()) return history;
+
+        Scanner scanner = new Scanner(file);
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine().trim();
+            if (!line.isEmpty()) {
+                history.add(line);
+            }
+        }
+        scanner.close();
+        return history;
     }
 }

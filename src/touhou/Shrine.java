@@ -14,7 +14,6 @@ public class Shrine {
         this.random = new Random();
     }
     
-    // CHANGED: Remove faithAmount parameter, just check if user can afford
     public PullResult pull(int currentFaith) {
         if (currentFaith < PULL_COST) {
             return new PullResult(false, null, "Not enough faith!");
@@ -22,7 +21,7 @@ public class Shrine {
         
         // 20% chance to get a random reward
         if (random.nextDouble() <= REWARD_CHANCE) {
-            List<Reward> rewards = rewardManager.getRewards();
+            List<Reward> rewards = rewardManager.getRewards(); // Move this line here
             if (!rewards.isEmpty()) {
                 Reward wonReward = rewards.get(random.nextInt(rewards.size()));
                 return new PullResult(true, wonReward, "Congratulations! You won: " + wonReward.getName());
@@ -30,9 +29,15 @@ public class Shrine {
                 return new PullResult(false, null, "No rewards available to win!");
             }
         }
-        
+        else{
+            List<Reward> rewards = rewardManager.getRewards(); // Move this line here
+            if (!rewards.isEmpty()) {
+            return new PullResult(false, null, "No rewards available to win!");
+            }
+        }
         return new PullResult(false, null, "Better luck next time...");
     }
+
     
     public int getPullCost() {
         return PULL_COST;

@@ -26,11 +26,11 @@ public class IntroPanel extends ImagePanel {
 		
         textBubble = new JLabel(messages[0], SwingConstants.CENTER);
 		textBubble.setHorizontalAlignment(SwingConstants.CENTER);
-        textBubble.setFont(new Font("Impact", Font.PLAIN, 18));
+        textBubble.setFont(new Font("Lucida Sans", Font.PLAIN, 18));
 		textBubble.setOpaque(false);
 		bubblePanel.add(textBubble);
 		
-        startButton = new JButton("Start Program");
+        startButton = new BubbleButton("Start Program");
         startButton.setEnabled(false); 					// will be enabled after all clicks/messages
 		ImageIcon icon = new ImageIcon(getClass().getResource("Assets/icon.png"));
 		frame.setIconImage(icon.getImage());
