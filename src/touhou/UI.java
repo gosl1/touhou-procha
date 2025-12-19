@@ -5,6 +5,7 @@ import java.awt.*;
 
 public class UI extends JPanel {
 	
+	private FaithManager faithManager;
 	private CardLayout cardLayout;
     private TaskManager taskManager;
 	private RewardManager rewardManager;
@@ -13,13 +14,15 @@ public class UI extends JPanel {
     private JList<String> taskList;
 	private JList<String> rewardList;
     private Roulette roulette;
+	private JLabel faithCounter;
+	
 
     public UI() {
+		faithManager = new FaithManager();
         taskManager = new TaskManager();
 		rewardManager = new RewardManager();
         taskManager.loadTasks(); // Load tasks at startup
 		rewardManager.loadRewards();
-		//NEW
         roulette = new Roulette(taskManager, rewardManager);
         initComponents();
     }
@@ -27,41 +30,25 @@ public class UI extends JPanel {
     private void initComponents() {
 		cardLayout = new CardLayout();
 		setLayout(cardLayout);
-
 		JPanel mainMenu = new ImagePanel("/touhou/Assets/MainMenuBG.png");
 		mainMenu.setLayout(new BorderLayout());
-		JPanel gambleMenu = new ImagePanel("/touhou/Assets/RouletteBG.png");
-		gambleMenu.setLayout(new BorderLayout());
+		
+		GridBagConstraints gbc = new GridBagConstraints();
+		
+		JPanel gambleMenu = new ImagePanel("/touhou/Assets/ShrineBG.png");
+		gambleMenu.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
+		
+		
 		JPanel office = new ImagePanel("/touhou/Assets/OfficeBG.png");
 		office.setLayout(new GridLayout(1, 2, 20, 0));
 		
 		JButton officeButton = new JButton("Office");
 		JButton gambleButton = new JButton("Gamble");
-		
-		JPanel mainLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		mainLeftPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		mainLeftPanel.add(officeButton);
 
-		JPanel mainRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		mainRightPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		mainRightPanel.add(gambleButton);
-		
-		mainLeftPanel.setOpaque(false);
-		mainRightPanel.setOpaque(false);
-		mainMenu.add(mainLeftPanel, BorderLayout.WEST);
-		mainMenu.add(mainRightPanel, BorderLayout.EAST);
-		
-		
-		
 		JPanel leftPanel = new JPanel(new GridBagLayout());
 		leftPanel.setOpaque(false);
 		leftPanel.setPreferredSize(new Dimension(600, 0));
 		leftPanel.setMinimumSize(new Dimension(600, 0));
-
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(10, 10, 10, 10);
-		gbc.fill = GridBagConstraints.BOTH;
-
 
 		taskListModel = new DefaultListModel<>();
 		rewardListModel = new DefaultListModel<>();
@@ -138,22 +125,45 @@ public class UI extends JPanel {
 		office.add(rightPanel);
 		
         JButton rouletteButton = new JButton("Roulette");
+		gambleMenu.add(rouletteButton);
 		JButton prayButton = new JButton("Pray");
 		
-		JPanel gambleLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		gambleLeftPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		gambleLeftPanel.add(rouletteButton);
-
-		JPanel gambleRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		gambleRightPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		gambleRightPanel.add(prayButton);
-		
+		JPanel mainLeftPanel = new JPanel(new BorderLayout());
 		mainLeftPanel.setOpaque(false);
-		mainRightPanel.setOpaque(false);
-		gambleMenu.add(gambleLeftPanel, BorderLayout.WEST);
-		gambleMenu.add(gambleRightPanel, BorderLayout.EAST);
 		
+		ImageIcon reimu = new ImageIcon(getClass().getResource("Assets/reimuintro.png"));
+		JLabel reimuicon = new JLabel(reimu);
+		reimuicon.setHorizontalAlignment(SwingConstants.LEFT);
+		reimuicon.setVerticalAlignment(SwingConstants.BOTTOM);
+		
+		mainLeftPanel.add(reimuicon, BorderLayout.SOUTH);
+		
+		JPanel mainRightPanel = new JPanel(new GridLayout(0, 1, 15, 15));
+		mainRightPanel.setOpaque(false);
+		mainRightPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+		
+		faithCounter = new JLabel("Faith: 0", SwingConstants.CENTER);
+		faithCounter.setFont(new Font("Impact", Font.PLAIN, 18));
+		faithCounter.setForeground(Color.BLACK);
+		faithCounter.setOpaque(false);
+		
+		BubblePanel faithBubble = new BubblePanel("Assets/DialogueBG.png");
+		faithBubble.setPreferredSize(new Dimension(220, 80)); // tweak to taste
 
+		// Padding so text doesn't touch edges
+		faithCounter.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25));
+
+		faithBubble.add(faithCounter);
+		
+		mainRightPanel.add(faithBubble);
+		
+		mainRightPanel.add(officeButton);
+		mainRightPanel.add(gambleButton);
+		mainRightPanel.add(prayButton);
+
+		mainMenu.add(mainLeftPanel, BorderLayout.WEST);
+		mainMenu.add(mainRightPanel, BorderLayout.EAST);
+		
         // Button actions
         addTaskButton.addActionListener(e -> addTaskDialog());
         renameTaskButton.addActionListener(e -> renameTaskDialog());
@@ -182,7 +192,7 @@ public class UI extends JPanel {
 		cardLayout.show(this, "MAIN");
     }
 
-	private void refreshTaskList() {
+    private void refreshTaskList() {
 		taskListModel.clear();
 		for (Task t : taskManager.getTasks()) {
 			// Calculate faith value for display
@@ -213,6 +223,11 @@ public class UI extends JPanel {
         rewardListModel.addElement(display);
         }
     }
+	
+	private void refreshFaithCounter(){
+		int faithNum = faithManager.getFaith();
+		faithCounter.setText("Faith: " + String.valueOf(faithNum));
+	}
 
     private void addTaskDialog() {
         JTextField nameField = new JTextField();
@@ -308,7 +323,7 @@ public class UI extends JPanel {
         refreshRewardList();
     }
 
-	private void spinRoulette() {
+    private void spinRoulette() {
 		Object result = roulette.spin();
 		
 		if (result == null) {
@@ -368,3 +383,4 @@ public class UI extends JPanel {
 		}
 	}
 }
+

@@ -1,3 +1,4 @@
 pib|Easy
 PLUH|Medium
 PIBBLE|Hard
+e|Easy
